@@ -1,0 +1,6 @@
+{
+  "name": "UAP EEE-102 Cover Page Maker",
+  "description": "Generate official University of Asia Pacific (UAP) EEE-102 lab report cover pages with PDF and Word (.docx) export.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

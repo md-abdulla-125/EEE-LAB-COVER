@@ -1,0 +1,165 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <!-- Path for the curved banner text -->
+    <path id="uapBannerArc" d="M 68 335 C 130 495, 370 495, 432 335" fill="none" />
+  </defs>
+
+  <!-- ========================================== -->
+  <!-- 1. BANNER TAILS (Left and Right Swallowtails) -->
+  <!-- ========================================== -->
+  <!-- Left Tail -->
+  <polygon points="4,222 62,216 62,492 33,456 4,492" fill="#1b3294" stroke="#5cd5f8" stroke-width="3" stroke-linejoin="round" />
+  <!-- Right Tail -->
+  <polygon points="438,216 496,222 496,492 467,456 438,492" fill="#1b3294" stroke="#5cd5f8" stroke-width="3" stroke-linejoin="round" />
+
+  <!-- ========================================== -->
+  <!-- 2. THE MAGENTA "U" SHIELD                  -->
+  <!-- ========================================== -->
+  <!-- The outer U shape -->
+  <path d="M 80 4 
+           L 142 4 
+           L 142 222 
+           C 142 305, 205 352, 250 352 
+           C 295 352, 358 305, 358 222 
+           L 358 4 
+           L 420 4 
+           L 420 226 
+           C 420 348, 335 412, 250 412 
+           C 165 412, 80 348, 80 226 
+           Z" 
+        fill="#b31878" 
+        stroke="#5cd5f8" 
+        stroke-width="3.5" 
+        stroke-linejoin="round" />
+
+  <!-- ========================================== -->
+  <!-- 3. INNER CREST: TOP CYAN AREA WITH UAP & BOOK -->
+  <!-- ========================================== -->
+  <!-- Cyan Background for UAP & Book -->
+  <rect x="144" y="28" width="212" height="194" fill="#80cbe7" stroke="#5cd5f8" stroke-width="2.5" />
+
+  <!-- Top "UAP" text box / header -->
+  <g id="uap-header-letters">
+    <text x="250" y="74" 
+          font-family="'Arial Black', 'Trebuchet MS', 'Impact', sans-serif" 
+          font-size="44" 
+          font-weight="900" 
+          fill="#1b3294" 
+          letter-spacing="3" 
+          text-anchor="middle">UAP</text>
+  </g>
+
+  <!-- Open Book -->
+  <g id="open-book">
+    <!-- Book white pages with navy outline -->
+    <!-- Left Page -->
+    <path d="M 158 96 
+             C 185 88, 222 91, 246 102 
+             L 246 210 
+             C 222 198, 185 195, 158 204 
+             Z" 
+          fill="#ffffff" 
+          stroke="#1b3294" 
+          stroke-width="3.5" 
+          stroke-linejoin="round" />
+    <!-- Right Page -->
+    <path d="M 254 102 
+             C 278 91, 315 88, 342 96 
+             L 342 204 
+             C 315 195, 278 198, 254 210 
+             Z" 
+          fill="#ffffff" 
+          stroke="#1b3294" 
+          stroke-width="3.5" 
+          stroke-linejoin="round" />
+
+    <!-- Left Page Text: Knowledge is Power -->
+    <text x="202" y="125" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#1b3294" text-anchor="middle">Knowledge</text>
+    <text x="202" y="148" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#1b3294" text-anchor="middle">is</text>
+    <text x="202" y="172" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#1b3294" text-anchor="middle">Power</text>
+
+    <!-- Right Page Text: Committed to Excellence -->
+    <text x="298" y="125" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#1b3294" text-anchor="middle">Committed</text>
+    <text x="298" y="148" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#1b3294" text-anchor="middle">to</text>
+    <text x="298" y="172" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" fill="#1b3294" text-anchor="middle">Excellence</text>
+  </g>
+
+  <!-- ========================================== -->
+  <!-- 4. INNER CREST: LOWER DEEP BLUE AREA (ATOM & 1996) -->
+  <!-- ========================================== -->
+  <!-- Lower deep blue background filling the curve inside U -->
+  <path d="M 142 222 
+           L 358 222 
+           L 358 224 
+           C 358 305, 295 352, 250 352 
+           C 205 352, 142 305, 142 224 
+           Z" 
+        fill="#1b3294" 
+        stroke="#5cd5f8" 
+        stroke-width="2.5" />
+
+  <!-- "19" on the left -->
+  <text x="180" y="291" font-family="'Arial Black', 'Helvetica Neue', Arial, sans-serif" font-size="25" font-weight="900" fill="#ffffff" text-anchor="middle">19</text>
+
+  <!-- ATOM SYMBOL in center -->
+  <g id="atom-symbol" transform="translate(250, 280)">
+    <!-- Vertical Ellipse -->
+    <ellipse cx="0" cy="0" rx="10" ry="38" fill="none" stroke="#ffffff" stroke-width="2.5" transform="rotate(0)" />
+    <!-- Diagonal Ellipse 1 (approx 60 deg) -->
+    <ellipse cx="0" cy="0" rx="10" ry="38" fill="none" stroke="#ffffff" stroke-width="2.5" transform="rotate(60)" />
+    <!-- Diagonal Ellipse 2 (approx -60 deg) -->
+    <ellipse cx="0" cy="0" rx="10" ry="38" fill="none" stroke="#ffffff" stroke-width="2.5" transform="rotate(-60)" />
+
+    <!-- Outer electron nodes (6 small white circles at tips) -->
+    <circle cx="0" cy="-38" r="3.5" fill="#ffffff" />
+    <circle cx="0" cy="38" r="3.5" fill="#ffffff" />
+    <circle cx="33" cy="-19" r="3.5" fill="#ffffff" />
+    <circle cx="-33" cy="19" r="3.5" fill="#ffffff" />
+    <circle cx="33" cy="19" r="3.5" fill="#ffffff" />
+    <circle cx="-33" cy="-19" r="3.5" fill="#ffffff" />
+
+    <!-- Center Nucleus: Circle with inner ring -->
+    <circle cx="0" cy="0" r="7" fill="#1b3294" stroke="#ffffff" stroke-width="2.5" />
+    <circle cx="0" cy="0" r="3" fill="#ffffff" />
+  </g>
+
+  <!-- "96" on the right -->
+  <text x="320" y="291" font-family="'Arial Black', 'Helvetica Neue', Arial, sans-serif" font-size="25" font-weight="900" fill="#ffffff" text-anchor="middle">96</text>
+
+  <!-- ========================================== -->
+  <!-- 5. MAIN CURVED BANNER: "UNIVERSITY OF ASIA PACIFIC" -->
+  <!-- ========================================== -->
+  <!-- White gap separator path behind ribbon -->
+  <path d="M 54 220 
+           C 60 376, 172 438, 250 438 
+           C 328 438, 440 376, 446 220 
+           L 490 220 
+           C 475 420, 340 488, 250 488 
+           C 160 488, 25 420, 10 220 
+           Z" 
+        fill="#ffffff" />
+
+  <!-- Main Dark Blue Curved Ribbon -->
+  <path d="M 58 220 
+           C 66 364, 168 432, 250 432 
+           C 332 432, 434 364, 442 220 
+           L 486 220 
+           C 472 404, 335 482, 250 482 
+           C 165 482, 28 404, 14 220 
+           Z" 
+        fill="#1b3294" 
+        stroke="#5cd5f8" 
+        stroke-width="3" 
+        stroke-linejoin="round" />
+
+  <!-- Curved Text: "UNIVERSITY OF ASIA PACIFIC" -->
+  <text font-family="'Arial Black', 'Trebuchet MS', 'Helvetica Neue', Arial, sans-serif" 
+        font-size="26" 
+        font-weight="900" 
+        fill="#ffffff" 
+        letter-spacing="2.2">
+    <textPath href="#uapBannerArc" startOffset="50%" textAnchor="middle">
+      UNIVERSITY OF ASIA PACIFIC
+    </textPath>
+  </text>
+</svg>
