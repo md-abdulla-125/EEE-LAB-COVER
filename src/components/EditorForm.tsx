@@ -96,7 +96,7 @@ export const EditorForm: React.FC<EditorFormProps> = ({
     <div className="space-y-6">
       {/* Top Action Bar */}
       <div className="bg-white rounded-xl p-4 sm:p-5 border border-slate-200 shadow-sm">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h2 className="text-base font-semibold text-slate-900 flex items-center gap-2">
               <FileEdit className="w-5 h-5 text-blue-600" />
@@ -114,30 +114,6 @@ export const EditorForm: React.FC<EditorFormProps> = ({
           >
             <RotateCcw className="w-3.5 h-3.5" />
             Reset Defaults
-          </button>
-        </div>
-
-        {/* Big Export Buttons */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-          <button
-            type="button"
-            id="download-pdf-btn"
-            onClick={onExportPdf}
-            disabled={isExportingPdf}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white rounded-lg font-medium text-sm shadow-sm hover:shadow transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            <FileText className="w-4 h-4" />
-            {isExportingPdf ? 'Generating PDF...' : 'Download PDF (.pdf)'}
-          </button>
-
-          <button
-            type="button"
-            id="print-pdf-btn"
-            onClick={onPrint}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-lg font-medium text-sm shadow-sm hover:shadow transition-all"
-          >
-            <Printer className="w-4 h-4" />
-            Print / Save as PDF
           </button>
         </div>
       </div>

@@ -199,16 +199,6 @@ export default function App() {
                   <FileText className="w-3.5 h-3.5" />
                   <span>{isExportingPdf ? 'Exporting...' : 'Download PDF'}</span>
                 </button>
-                <button
-                  type="button"
-                  id="header-print-btn"
-                  onClick={handlePrint}
-                  className="inline-flex items-center gap-1 sm:gap-1.5 px-3 py-1.5 bg-slate-700 hover:bg-slate-600 active:bg-slate-800 text-white rounded-lg text-xs font-semibold shadow-xs transition"
-                  title="Print Cover Page"
-                >
-                  <Printer className="w-3.5 h-3.5" />
-                  <span>Print</span>
-                </button>
               </>
             ) : (
               <span className="text-[11px] text-blue-200 hidden md:inline-block bg-blue-900/50 px-2.5 py-1 rounded-md border border-blue-400/20">
@@ -320,27 +310,6 @@ export default function App() {
                       100%
                     </button>
                   </div>
-
-                  <div className="hidden sm:flex items-center gap-1.5 pl-2 border-l border-slate-200">
-                    <button
-                      type="button"
-                      onClick={handleExportPdf}
-                      disabled={isExportingPdf}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 bg-rose-50 text-rose-700 hover:bg-rose-100 rounded-md text-xs font-medium border border-rose-200 transition disabled:opacity-50"
-                      title="Download PDF File"
-                    >
-                      <FileText className="w-3 h-3" />
-                      PDF
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handlePrint}
-                      className="inline-flex items-center gap-1 px-2 py-1 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-md text-xs font-medium transition"
-                      title="Print Document"
-                    >
-                      <Printer className="w-3 h-3" />
-                    </button>
-                  </div>
                 </div>
               </div>
 
@@ -351,7 +320,7 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Quick Export bar underneath preview */}
+              {/* Quick Info bar underneath preview */}
               <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 no-print">
                 <div className="flex items-center gap-2">
                   <span>Format:</span>
@@ -359,15 +328,6 @@ export default function App() {
                   <span>•</span>
                   <span>Font:</span>
                   <span className="font-semibold text-slate-700">Times New Roman</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <button
-                    type="button"
-                    onClick={handleExportPdf}
-                    className="text-rose-700 hover:text-rose-800 font-semibold underline decoration-rose-300 underline-offset-2"
-                  >
-                    Download .pdf
-                  </button>
                 </div>
               </div>
             </div>
