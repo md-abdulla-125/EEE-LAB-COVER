@@ -342,14 +342,15 @@ export const MergePdf: React.FC<MergePdfProps> = ({ onGetCoverPagePdf }) => {
           {/* Merge Settings & Action */}
           <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
             <div className="flex-1">
-              <label className="block text-xs font-medium text-slate-600 mb-1">
-                Merged File Name
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Output PDF Filename
               </label>
               <input
                 type="text"
                 value={outputName}
                 onChange={(e) => setOutputName(e.target.value)}
-                className="w-full sm:max-w-xs px-3 py-1.5 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
+                placeholder="UAP_EEE102_Lab_Report_Complete.pdf"
+                className="w-full sm:max-w-xs px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono text-slate-800 bg-white"
               />
             </div>
 

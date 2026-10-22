@@ -10,6 +10,8 @@ import {
   ZoomOut,
   Hash,
   Files,
+  Image as ImageIcon,
+  Scissors,
 } from 'lucide-react';
 import { CoverPageData } from './types';
 import { DEFAULT_COVER_DATA } from './data/defaultData';
@@ -20,6 +22,8 @@ import { exportToDocx } from './utils/docxExport';
 import { exportToPdf, printCoverPage, generateCoverPdfBlob } from './utils/pdfExport';
 import { AddPageNumberPdf } from './components/AddPageNumberPdf';
 import { MergePdf } from './components/MergePdf';
+import { ImageToPdf } from './components/ImageToPdf';
+import { PdfCutter } from './components/PdfCutter';
 
 export default function App() {
   const [data, setData] = useState<CoverPageData>(() => {
@@ -34,7 +38,7 @@ export default function App() {
     return DEFAULT_COVER_DATA;
   });
 
-  const [activeSection, setActiveSection] = useState<'cover' | 'pagenum' | 'merge'>('cover');
+  const [activeSection, setActiveSection] = useState<'cover' | 'pagenum' | 'merge' | 'imagetopdf' | 'cutter'>('cover');
   const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor');
   const [zoom, setZoom] = useState<number>(0.68);
   const [isExportingDocx, setIsExportingDocx] = useState<boolean>(false);
@@ -134,33 +138,33 @@ export default function App() {
               />
             </div>
             <span className="hidden sm:inline font-bold text-xs tracking-wide text-blue-200 uppercase">
-              UAP EEE-102
+              UAP-25201125
             </span>
           </div>
 
-          {/* 3 Section Navigation in Header: 1. Cover  2. Add Page Num  3. Merge PDF */}
+          {/* 5 Section Navigation in Header: 1. Cover 2. Add Page Num 3. Merge PDF 4. Image to PDF 5. PDF Cutter */}
           <nav
             id="header-tools-nav"
-            className="flex items-center p-1 bg-[#0f173b] rounded-xl border border-white/10 shadow-inner"
+            className="flex items-center gap-0.5 p-1 bg-[#0f173b] rounded-xl border border-white/10 shadow-inner overflow-x-auto max-w-full scrollbar-none"
           >
             <button
               type="button"
               id="section-nav-cover"
               onClick={() => setActiveSection('cover')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition ${
                 activeSection === 'cover'
                   ? 'bg-blue-600 text-white shadow-xs'
                   : 'text-slate-300 hover:text-white hover:bg-white/5'
               }`}
             >
               <FileText className="w-3.5 h-3.5" />
-              <span>1. Cover</span>
+              <span>1. EEE Lab Cover -102</span>
             </button>
             <button
               type="button"
               id="section-nav-pagenum"
               onClick={() => setActiveSection('pagenum')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition ${
                 activeSection === 'pagenum'
                   ? 'bg-blue-600 text-white shadow-xs'
                   : 'text-slate-300 hover:text-white hover:bg-white/5'
@@ -173,7 +177,7 @@ export default function App() {
               type="button"
               id="section-nav-merge"
               onClick={() => setActiveSection('merge')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition ${
                 activeSection === 'merge'
                   ? 'bg-blue-600 text-white shadow-xs'
                   : 'text-slate-300 hover:text-white hover:bg-white/5'
@@ -181,6 +185,32 @@ export default function App() {
             >
               <Files className="w-3.5 h-3.5" />
               <span>3. Merge PDF</span>
+            </button>
+            <button
+              type="button"
+              id="section-nav-imagetopdf"
+              onClick={() => setActiveSection('imagetopdf')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition ${
+                activeSection === 'imagetopdf'
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'text-slate-300 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <ImageIcon className="w-3.5 h-3.5" />
+              <span>4. Image to PDF</span>
+            </button>
+            <button
+              type="button"
+              id="section-nav-cutter"
+              onClick={() => setActiveSection('cutter')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition ${
+                activeSection === 'cutter'
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'text-slate-300 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <Scissors className="w-3.5 h-3.5" />
+              <span>5. PDF Cutter</span>
             </button>
           </nav>
 
@@ -342,6 +372,16 @@ export default function App() {
         {/* 3. Merge PDF Section */}
         {activeSection === 'merge' && (
           <MergePdf onGetCoverPagePdf={handleGetCoverPagePdfBlob} />
+        )}
+
+        {/* 4. Image to PDF Section */}
+        {activeSection === 'imagetopdf' && (
+          <ImageToPdf />
+        )}
+
+        {/* 5. PDF Cutter Section */}
+        {activeSection === 'cutter' && (
+          <PdfCutter />
         )}
       </main>
 

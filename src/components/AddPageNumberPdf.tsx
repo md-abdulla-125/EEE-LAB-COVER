@@ -25,6 +25,7 @@ export const AddPageNumberPdf: React.FC = () => {
   const [skipCover, setSkipCover] = useState<boolean>(true);
   const [startNumber, setStartNumber] = useState<number>(1);
   const [fontSize, setFontSize] = useState<number>(11);
+  const [outputName, setOutputName] = useState<string>('UAP_Numbered_Report.pdf');
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -40,6 +41,8 @@ export const AddPageNumberPdf: React.FC = () => {
       const pdf = await PDFDocument.load(buffer);
       setFile(selectedFile);
       setPageCount(pdf.getPageCount());
+      const baseName = selectedFile.name.replace(/\.pdf$/i, '');
+      setOutputName(`${baseName}_numbered.pdf`);
       setStatusMessage(null);
     } catch {
       setStatusMessage({ type: 'error', text: 'Failed to read the PDF. It may be password-protected or corrupted.' });
@@ -61,6 +64,8 @@ export const AddPageNumberPdf: React.FC = () => {
       const pdf = await PDFDocument.load(buffer);
       setFile(droppedFile);
       setPageCount(pdf.getPageCount());
+      const baseName = droppedFile.name.replace(/\.pdf$/i, '');
+      setOutputName(`${baseName}_numbered.pdf`);
       setStatusMessage(null);
     } catch {
       setStatusMessage({ type: 'error', text: 'Failed to read the PDF. It may be password-protected or corrupted.' });
@@ -137,12 +142,17 @@ export const AddPageNumberPdf: React.FC = () => {
 
       const modifiedPdfBytes = await pdfDoc.save();
       const blob = new Blob([modifiedPdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
-      const originalName = file.name.replace(/\.pdf$/i, '');
-      saveAs(blob, `${originalName}_numbered.pdf`);
+      const defaultOriginalName = `${file.name.replace(/\.pdf$/i, '')}_numbered.pdf`;
+      const trimmedOutput = outputName.trim();
+      const finalFilename = trimmedOutput
+        ? (trimmedOutput.toLowerCase().endsWith('.pdf') ? trimmedOutput : `${trimmedOutput}.pdf`)
+        : defaultOriginalName;
+
+      saveAs(blob, finalFilename);
 
       setStatusMessage({
         type: 'success',
-        text: `Successfully added page numbers to ${total} pages! Download started.`,
+        text: `Successfully added page numbers to ${total} pages! Download started (${finalFilename}).`,
       });
     } catch {
       setStatusMessage({
@@ -435,16 +445,32 @@ export const AddPageNumberPdf: React.FC = () => {
               </div>
             </div>
 
-            {/* Action Button */}
-            <button
-              type="button"
-              onClick={handleProcessPdf}
-              disabled={isProcessing}
-              className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-xl text-sm font-semibold shadow-sm hover:shadow transition flex items-center justify-center gap-2 disabled:opacity-50"
-            >
-              <Download className="w-4 h-4" />
-              {isProcessing ? 'Processing PDF...' : 'Add Page Numbers & Download'}
-            </button>
+            {/* Output PDF Filename & Action Button */}
+            <div className="space-y-3 pt-3 border-t border-slate-100">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Output PDF Filename
+                </label>
+                <input
+                  type="text"
+                  value={outputName}
+                  onChange={(e) => setOutputName(e.target.value)}
+                  placeholder="UAP_Numbered_Report.pdf"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-slate-800 bg-white"
+                />
+              </div>
+
+              {/* Action Button */}
+              <button
+                type="button"
+                onClick={handleProcessPdf}
+                disabled={isProcessing}
+                className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-xl text-sm font-semibold shadow-sm hover:shadow transition flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                <Download className="w-4 h-4" />
+                {isProcessing ? 'Processing PDF...' : 'Add Page Numbers & Download'}
+              </button>
+            </div>
           </div>
         </div>
       )}
