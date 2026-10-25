@@ -13,7 +13,6 @@ import {
   FileText,
   Plus,
   RefreshCw,
-  Sparkles,
 } from 'lucide-react';
 
 interface PdfItem {
@@ -179,29 +178,18 @@ export const MergePdf: React.FC<MergePdfProps> = ({ onGetCoverPagePdf }) => {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Banner */}
-      <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="bg-white rounded-2xl p-5 border border-[#FFE4B5] shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-lg bg-indigo-50 text-indigo-700">
+          <div className="p-2.5 rounded-xl bg-[#FFF1D1] text-[#DF301C]">
             <Files className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-base font-bold text-slate-900">Merge PDF Files into One Report</h2>
+            <h2 className="text-base font-bold text-slate-900">3. Merge PDF Files into One Report</h2>
             <p className="text-xs text-slate-500">
               Combine your generated cover page with your experiment report sheets into a single ready-to-submit PDF.
             </p>
           </div>
         </div>
-
-        {onGetCoverPagePdf && (
-          <button
-            type="button"
-            onClick={handleAddCurrentCover}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 rounded-lg text-xs font-semibold shadow-xs transition"
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            + Add Current Cover Page
-          </button>
-        )}
       </div>
 
       {statusMessage && (
@@ -228,19 +216,19 @@ export const MergePdf: React.FC<MergePdfProps> = ({ onGetCoverPagePdf }) => {
           e.preventDefault();
           handleFiles(e.dataTransfer.files);
         }}
-        className="bg-white rounded-xl border-2 border-dashed border-indigo-200 hover:border-indigo-400 p-6 sm:p-8 text-center transition cursor-pointer flex flex-col items-center justify-center group"
+        className="bg-white rounded-2xl border-2 border-dashed border-[#FFE4B5] hover:border-[#FF9100] p-6 sm:p-8 text-center transition cursor-pointer flex flex-col items-center justify-center group hover:bg-[#FFF1D1]/10"
         onClick={() => document.getElementById('merge-files-input')?.click()}
       >
-        <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-2.5 group-hover:scale-110 transition-transform">
+        <div className="w-12 h-12 rounded-2xl bg-[#FFF1D1] text-[#DF301C] flex items-center justify-center mb-2.5 group-hover:scale-110 transition-transform shadow-xs">
           <Upload className="w-6 h-6" />
         </div>
-        <h3 className="text-sm font-semibold text-slate-900 mb-1">
+        <h3 className="text-sm font-bold text-slate-900 mb-1">
           Click or drop PDF files here to merge
         </h3>
         <p className="text-xs text-slate-500 max-w-sm mb-3">
           Select multiple files (Cover Page, Experiment Theory, Graph Calculations, Observations).
         </p>
-        <span className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white shadow-xs group-hover:bg-indigo-700 transition">
+        <span className="px-4 py-2 rounded-xl text-xs font-bold bg-[#00B7CD] hover:bg-[#009CB0] text-white shadow-xs transition">
           Browse PDFs
         </span>
         <input
@@ -350,7 +338,7 @@ export const MergePdf: React.FC<MergePdfProps> = ({ onGetCoverPagePdf }) => {
                 value={outputName}
                 onChange={(e) => setOutputName(e.target.value)}
                 placeholder="UAP_EEE102_Lab_Report_Complete.pdf"
-                className="w-full sm:max-w-xs px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono text-slate-800 bg-white"
+                className="w-full sm:max-w-xs px-3.5 py-2.5 text-[16px] sm:text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B7CD] font-mono text-slate-800 bg-white min-h-[44px]"
               />
             </div>
 
@@ -358,7 +346,7 @@ export const MergePdf: React.FC<MergePdfProps> = ({ onGetCoverPagePdf }) => {
               type="button"
               onClick={handleMergePdfs}
               disabled={isMerging || items.length < 2}
-              className="py-2.5 px-5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl text-xs font-semibold shadow-xs hover:shadow transition flex items-center justify-center gap-2 disabled:opacity-50"
+              className="py-3 px-5 bg-[#DF301C] hover:bg-[#C72412] active:bg-[#B01F0E] text-white rounded-xl text-xs font-bold shadow-xs transition flex items-center justify-center gap-2 disabled:opacity-50 min-h-[44px]"
             >
               <Download className="w-4 h-4" />
               {isMerging ? 'Merging PDFs...' : `Merge & Download (${items.length} Files)`}

@@ -4,21 +4,16 @@ import {
   GraduationCap,
   FlaskConical,
   Calendar,
-  Sparkles,
   FileText,
   RotateCcw,
   Building,
   CheckCircle2,
-  FileDown,
-  Printer,
   FileEdit,
 } from 'lucide-react';
 import { CoverPageData } from '../types';
 import {
   DEFAULT_COVER_DATA,
   PRESET_EXPERIMENTS,
-  PRESET_DEPARTMENTS,
-  PRESET_SEMESTERS,
   PRESET_INSTRUCTORS,
 } from '../data/defaultData';
 
@@ -95,72 +90,53 @@ export const EditorForm: React.FC<EditorFormProps> = ({
   return (
     <div className="space-y-6">
       {/* Top Action Bar */}
-      <div className="bg-white rounded-xl p-4 sm:p-5 border border-slate-200 shadow-sm">
+      <div className="bg-white rounded-2xl p-4 sm:p-5 border border-[#FFE4B5] shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h2 className="text-base font-semibold text-slate-900 flex items-center gap-2">
-              <FileEdit className="w-5 h-5 text-blue-600" />
-              Cover Page Details
+            <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+              <FileEdit className="w-5 h-5 text-[#DF301C]" />
+              5. EEE Lab Cover -102
             </h2>
             <p className="text-xs text-slate-500 mt-0.5">
-              Fill in the fields or use presets. Live preview updates immediately.
+              Fill in fields or choose one of the 10 experiments below.
             </p>
           </div>
           <button
             type="button"
             onClick={handleReset}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors self-start sm:self-auto"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-[#DF301C] bg-[#FFF1D1]/60 hover:bg-[#FFF1D1] active:bg-[#FFE8B8] border border-[#FFD88A] rounded-xl transition self-start sm:self-auto"
             title="Reset form to default UAP EEE-102 template"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             Reset Defaults
           </button>
         </div>
-      </div>
 
-      {/* Quick Select: EEE-102 Presets (All 10 Lab Experiments) */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl p-4">
-        <div className="flex items-center justify-between gap-2 mb-2.5">
-          <div className="flex items-center gap-2 text-xs font-semibold text-blue-900 uppercase tracking-wider">
-            <Sparkles className="w-4 h-4 text-blue-600" />
-            Quick Experiment Presets (EEE 102 – 10 Experiments)
-          </div>
-          <span className="text-[11px] text-blue-600 font-medium">Click to apply</span>
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
-          {PRESET_EXPERIMENTS.map((exp) => (
-            <button
-              key={exp.no}
-              type="button"
-              onClick={() => handleExperimentSelect(exp.no)}
-              className={`p-2 text-left rounded-lg text-xs transition-all border ${
-                data.expNo === exp.no
-                  ? 'bg-blue-600 text-white border-blue-600 shadow-sm ring-2 ring-blue-300'
-                  : 'bg-white hover:bg-blue-100/70 text-slate-800 border-blue-200/80 hover:border-blue-300'
-              }`}
-            >
-              <div className="font-bold flex items-center justify-between text-[11.5px]">
-                <span>Exp #{exp.no}</span>
-                {data.expNo === exp.no && <CheckCircle2 className="w-3.5 h-3.5 text-white shrink-0" />}
-              </div>
-              <div className="line-clamp-2 text-[10.5px] opacity-90 mt-0.5 leading-tight">
-                {exp.name}
-              </div>
-            </button>
-          ))}
+        {/* Action Buttons for Lab Report */}
+        <div className="w-full pt-3 mt-3 border-t border-[#FFE4B5]/40">
+          <button
+            type="button"
+            id="download-pdf-btn"
+            onClick={onExportPdf}
+            disabled={isExportingPdf}
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#DF301C] hover:bg-[#C72412] active:bg-[#B01F0E] text-white rounded-xl text-xs font-bold shadow-xs transition disabled:opacity-50 min-h-[44px]"
+          >
+            <FileText className="w-4 h-4" />
+            <span>{isExportingPdf ? 'Exporting PDF...' : 'Download PDF'}</span>
+          </button>
         </div>
       </div>
 
       {/* Section 1: Student Information */}
-      <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-xs space-y-4">
-        <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
-          <User className="w-4 h-4 text-blue-600" />
-          <h3 className="font-semibold text-sm text-slate-900">Student Information (Submitted By)</h3>
+      <div className="bg-white rounded-2xl p-4 sm:p-5 border border-[#FFE4B5]/80 shadow-xs space-y-4">
+        <div className="flex items-center gap-2 pb-2 border-b border-[#FFE4B5]/50">
+          <User className="w-4 h-4 text-[#DF301C]" />
+          <h3 className="font-bold text-sm text-slate-900">Student Information (Submitted By)</h3>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
           <div>
-            <label className="block text-xs font-medium text-slate-700 mb-1">
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
               Student Name <span className="text-rose-500">*</span>
             </label>
             <input
@@ -169,12 +145,12 @@ export const EditorForm: React.FC<EditorFormProps> = ({
               value={data.studentName}
               onChange={(e) => updateField('studentName', e.target.value)}
               placeholder="e.g. MD. TARIQUL ISLAM"
-              className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+              className="w-full px-3.5 py-2.5 text-[16px] sm:text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B7CD]/20 focus:border-[#00B7CD] transition min-h-[44px] text-slate-800"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-700 mb-1">
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">
               Student ID <span className="text-rose-500">*</span>
             </label>
             <input
@@ -183,43 +159,43 @@ export const EditorForm: React.FC<EditorFormProps> = ({
               value={data.studentId}
               onChange={(e) => updateField('studentId', e.target.value)}
               placeholder="e.g. 25201125"
-              className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+              className="w-full px-3.5 py-2.5 text-[16px] sm:text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B7CD]/20 focus:border-[#00B7CD] transition min-h-[44px] text-slate-800 font-mono"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-700 mb-1">Semester</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">Semester</label>
             <input
               type="text"
               id="semester-input"
               value={data.semester}
               onChange={(e) => updateField('semester', e.target.value)}
               placeholder="e.g. 1st Year 2nd Semester"
-              className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+              className="w-full px-3.5 py-2.5 text-[16px] sm:text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B7CD]/20 focus:border-[#00B7CD] transition min-h-[44px] text-slate-800"
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2.5">
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">Section</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">Section</label>
               <input
                 type="text"
                 id="section-input"
                 value={data.section}
                 onChange={(e) => updateField('section', e.target.value)}
                 placeholder="e.g. A"
-                className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition uppercase"
+                className="w-full px-3.5 py-2.5 text-[16px] sm:text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B7CD]/20 focus:border-[#00B7CD] transition min-h-[44px] text-slate-800 uppercase"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">Group</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">Group</label>
               <input
                 type="text"
                 id="group-input"
                 value={data.group}
                 onChange={(e) => updateField('group', e.target.value)}
                 placeholder="e.g. A1"
-                className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition uppercase"
+                className="w-full px-3.5 py-2.5 text-[16px] sm:text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B7CD]/20 focus:border-[#00B7CD] transition min-h-[44px] text-slate-800 uppercase"
               />
             </div>
           </div>
@@ -437,57 +413,29 @@ export const EditorForm: React.FC<EditorFormProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-medium text-slate-700 mb-1">Department Header</label>
-            <div className="space-y-1.5">
-              <input
-                type="text"
-                value={data.department}
-                onChange={(e) => updateField('department', e.target.value)}
-                placeholder="e.g. DEPARTMENT OF CSE"
-                className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition font-medium"
-              />
-              <div className="flex flex-wrap gap-1">
-                {PRESET_DEPARTMENTS.slice(0, 3).map((dept) => (
-                  <button
-                    key={dept}
-                    type="button"
-                    onClick={() => updateField('department', dept)}
-                    className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-600"
-                  >
-                    {dept.replace('DEPARTMENT OF ', '')}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <input
+              type="text"
+              value={data.department}
+              onChange={(e) => updateField('department', e.target.value)}
+              placeholder="e.g. DEPARTMENT OF CSE"
+              className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition font-medium"
+            />
           </div>
 
           <div>
             <label className="block text-xs font-medium text-slate-700 mb-1">Report Subtitle / Term</label>
-            <div className="space-y-1.5">
-              <input
-                type="text"
-                value={data.reportType}
-                onChange={(e) => updateField('reportType', e.target.value)}
-                placeholder="e.g. Lab Report – Spring 2026"
-                className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-              />
-              <div className="flex flex-wrap gap-1">
-                {PRESET_SEMESTERS.slice(0, 3).map((sem) => (
-                  <button
-                    key={sem}
-                    type="button"
-                    onClick={() => updateField('reportType', sem)}
-                    className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-600"
-                  >
-                    {sem}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <input
+              type="text"
+              value={data.reportType}
+              onChange={(e) => updateField('reportType', e.target.value)}
+              placeholder="e.g. Lab Report – Spring 2026"
+              className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+            />
           </div>
 
           <div className="sm:col-span-2">
-            <label className="block text-xs font-medium text-slate-700 mb-1.5">Page Border Style</label>
-            <div className="grid grid-cols-4 gap-2">
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">Page Border Style</label>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {[
                 { id: 'single', label: 'Single Line (Official)' },
                 { id: 'double', label: 'Double Line' },
@@ -498,10 +446,10 @@ export const EditorForm: React.FC<EditorFormProps> = ({
                   key={style.id}
                   type="button"
                   onClick={() => updateField('borderStyle', style.id as CoverPageData['borderStyle'])}
-                  className={`py-2 px-2 text-xs rounded-lg border transition text-center font-medium ${
+                  className={`py-2 px-2 text-xs rounded-xl border transition text-center font-semibold ${
                     data.borderStyle === style.id
-                      ? 'border-blue-600 bg-blue-50 text-blue-700 ring-1 ring-blue-600'
-                      : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
+                      ? 'border-[#00B7CD] bg-[#FFF1D1] text-[#DF301C] shadow-xs'
+                      : 'border-slate-200 bg-white text-slate-700 hover:bg-[#FFF1D1]/40'
                   }`}
                 >
                   {style.label}

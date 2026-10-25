@@ -1,6 +1,68 @@
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas-pro';
-import { CoverPageData } from '../types';
+import { CoverPageData, AssignmentCoverData } from '../types';
+
+export async function exportAssignmentToPdf(
+  element: HTMLElement,
+  data: AssignmentCoverData
+): Promise<void> {
+  const container = document.createElement('div');
+  container.style.position = 'fixed';
+  container.style.top = '0';
+  container.style.left = '-12000px';
+  container.style.width = '794px';
+  container.style.height = '1123px';
+  container.style.zIndex = '-99999';
+  container.style.overflow = 'hidden';
+  container.style.opacity = '1';
+  container.style.pointerEvents = 'none';
+
+  const clone = element.cloneNode(true) as HTMLElement;
+  clone.id = 'assignment-cover-page-a4-pdf-clone';
+  clone.style.transform = 'none';
+  clone.style.margin = '0';
+  clone.style.width = '794px';
+  clone.style.height = '1123px';
+  clone.style.display = 'flex';
+  clone.style.flexDirection = 'column';
+  clone.style.justifyContent = 'space-between';
+  clone.style.boxShadow = 'none';
+
+  container.appendChild(clone);
+  document.body.appendChild(container);
+
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 60));
+
+    const canvas = await html2canvas(clone, {
+      scale: 2.5,
+      useCORS: true,
+      logging: false,
+      backgroundColor: '#ffffff',
+      width: 794,
+      height: 1123,
+    });
+
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4',
+      compress: true,
+    });
+
+    pdf.addImage(imgData, 'PNG', 0, 0, 210, 297, undefined, 'FAST');
+
+    const sanitizedCode = (data.courseCode || 'Assignment').replace(/[^a-zA-Z0-9_-]/g, '_');
+    const sanitizedId = (data.studentId || '24108116').replace(/[^a-zA-Z0-9_-]/g, '_');
+    const fileName = `UAP_${sanitizedCode}_Assignment_${sanitizedId}.pdf`;
+    pdf.save(fileName);
+  } finally {
+    if (container.parentNode) {
+      container.parentNode.removeChild(container);
+    }
+  }
+}
 
 export async function exportToPdf(
   element: HTMLElement,

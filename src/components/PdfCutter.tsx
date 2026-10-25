@@ -307,23 +307,23 @@ export const PdfCutter: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Tool Header Card */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 sm:p-6">
+      <div className="bg-white rounded-2xl border border-[#FFE4B5] shadow-xs p-5 sm:p-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600 shadow-xs">
+            <div className="w-11 h-11 rounded-xl bg-[#FFF1D1] border border-[#FFE4B5] flex items-center justify-center text-[#DF301C] shadow-xs">
               <Scissors className="w-6 h-6" />
             </div>
             <div>
               <h2 className="text-lg font-bold text-slate-800">
-                PDF Cutter & Splitter
+                6. PDF Cutter & Splitter
               </h2>
               <p className="text-xs text-slate-500 mt-0.5">
                 Cut specific pages, extract sections, delete unwanted sheets, or split your report into separate files.
               </p>
             </div>
           </div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-purple-50 border border-purple-200/60 rounded-full text-xs font-semibold text-purple-700">
-            <Sparkles className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#FFF1D1] border border-[#FFD88A] rounded-full text-xs font-bold text-[#DF301C]">
+            <Sparkles className="w-3.5 h-3.5 text-[#FF9100]" />
             <span>100% Client-Side • Instant</span>
           </div>
         </div>
@@ -335,7 +335,7 @@ export const PdfCutter: React.FC = () => {
           onDragOver={(e) => e.preventDefault()}
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
-          className="bg-white border-2 border-dashed border-purple-200 hover:border-purple-400 rounded-2xl p-10 text-center cursor-pointer transition group shadow-xs hover:bg-purple-50/20"
+          className="bg-white border-2 border-dashed border-[#FFE4B5] hover:border-[#FF9100] rounded-2xl p-10 text-center cursor-pointer transition group shadow-xs hover:bg-[#FFF1D1]/10"
         >
           <input
             ref={fileInputRef}
@@ -347,21 +347,24 @@ export const PdfCutter: React.FC = () => {
               if (file) handleFile(file);
             }}
           />
-          <div className="w-14 h-14 mx-auto rounded-2xl bg-purple-50 group-hover:bg-purple-100/70 border border-purple-100 flex items-center justify-center text-purple-600 transition mb-3">
+          <div className="w-14 h-14 mx-auto rounded-2xl bg-[#FFF1D1] group-hover:scale-110 border border-[#FFE4B5] flex items-center justify-center text-[#DF301C] transition mb-3 shadow-xs">
             <Upload className="w-7 h-7" />
           </div>
-          <h3 className="text-sm font-bold text-slate-800">
+          <h3 className="text-sm font-bold text-slate-800 mb-1">
             Click or Drag & Drop PDF Document Here
           </h3>
-          <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto">
+          <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto mb-3">
             Upload your lab report or assignment PDF to choose which pages to cut, extract, or remove.
           </p>
+          <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-[#00B7CD] hover:bg-[#009CB0] text-white shadow-xs transition">
+            Browse PDF File
+          </span>
         </div>
       ) : (
         /* Loaded PDF Document Card */
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 space-y-5">
+        <div className="bg-white rounded-2xl border border-[#FFE4B5] shadow-xs p-5 space-y-5">
           {/* File details bar */}
-          <div className="flex flex-wrap items-center justify-between gap-3 bg-purple-50/50 border border-purple-100 rounded-xl p-3.5">
+          <div className="flex flex-wrap items-center justify-between gap-3 bg-[#FFF1D1]/40 border border-[#FFE4B5] rounded-xl p-3.5">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-lg bg-purple-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
                 PDF
@@ -477,7 +480,7 @@ export const PdfCutter: React.FC = () => {
                   value={rangeInput}
                   onChange={(e) => handleRangeInputChange(e.target.value)}
                   placeholder="e.g. 1-2, 5, 8"
-                  className="w-full text-xs font-mono bg-white border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full text-[16px] sm:text-xs font-mono bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 min-h-[44px] focus:outline-none focus:ring-2 focus:ring-[#00B7CD]"
                 />
 
                 {/* Quick Presets */}
@@ -608,7 +611,7 @@ export const PdfCutter: React.FC = () => {
                 type="text"
                 value={outputName}
                 onChange={(e) => setOutputName(e.target.value)}
-                className="w-full text-xs bg-white border border-slate-300 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full text-xs bg-white border border-slate-300 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#00B7CD]"
                 placeholder="report_cut.pdf"
               />
             </div>
@@ -620,7 +623,7 @@ export const PdfCutter: React.FC = () => {
               type="button"
               onClick={handleExecuteCut}
               disabled={isProcessing}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-purple-600 hover:bg-purple-500 active:bg-purple-700 text-white rounded-xl text-xs font-bold shadow-md hover:shadow-lg transition disabled:opacity-50"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#DF301C] hover:bg-[#C72412] active:bg-[#B01F0E] text-white rounded-xl text-xs font-bold shadow-xs transition disabled:opacity-50 min-h-[44px]"
             >
               {isProcessing ? (
                 <>

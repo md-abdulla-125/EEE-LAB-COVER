@@ -177,13 +177,13 @@ export const AddPageNumberPdf: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header Info Banner */}
-      <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-xs">
+      <div className="bg-white rounded-2xl p-5 border border-[#FFE4B5] shadow-xs">
         <div className="flex items-center gap-2.5 mb-1.5">
-          <div className="p-2 rounded-lg bg-blue-50 text-blue-700">
+          <div className="p-2.5 rounded-xl bg-[#FFF1D1] text-[#DF301C]">
             <Hash className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-base font-bold text-slate-900">Add Page Numbers to Lab Report PDF</h2>
+            <h2 className="text-base font-bold text-slate-900">2. Add Page Numbers to PDF</h2>
             <p className="text-xs text-slate-500">
               Easily stamp clean page numbering onto your lab report sheets before final submission.
             </p>
@@ -213,19 +213,19 @@ export const AddPageNumberPdf: React.FC = () => {
         <div
           onDragOver={(e) => e.preventDefault()}
           onDrop={handleDrop}
-          className="bg-white rounded-xl border-2 border-dashed border-blue-200 hover:border-blue-400 p-8 sm:p-12 text-center transition cursor-pointer flex flex-col items-center justify-center group"
+          className="bg-white rounded-2xl border-2 border-dashed border-[#FFE4B5] hover:border-[#FF9100] p-8 sm:p-12 text-center transition cursor-pointer flex flex-col items-center justify-center group hover:bg-[#FFF1D1]/10"
           onClick={() => document.getElementById('pdf-upload-input')?.click()}
         >
-          <div className="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+          <div className="w-14 h-14 rounded-2xl bg-[#FFF1D1] text-[#DF301C] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-xs">
             <Upload className="w-7 h-7" />
           </div>
-          <h3 className="text-sm font-semibold text-slate-900 mb-1">
+          <h3 className="text-sm font-bold text-slate-900 mb-1">
             Click to upload or drag & drop your PDF
           </h3>
           <p className="text-xs text-slate-500 max-w-sm mb-4">
             Select your lab report document. Page numbers will be applied directly without changing your existing layout.
           </p>
-          <span className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 text-white shadow-xs group-hover:bg-blue-700 transition">
+          <span className="px-4 py-2 rounded-xl text-xs font-bold bg-[#00B7CD] hover:bg-[#009CB0] text-white shadow-xs transition">
             Browse Files (.pdf)
           </span>
           <input
@@ -358,7 +358,7 @@ export const AddPageNumberPdf: React.FC = () => {
                     min={1}
                     value={startNumber}
                     onChange={(e) => setStartNumber(Math.max(1, parseInt(e.target.value) || 1))}
-                    className="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 text-[16px] sm:text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B7CD] min-h-[44px]"
                   />
                 </div>
                 <div>
@@ -368,7 +368,7 @@ export const AddPageNumberPdf: React.FC = () => {
                   <select
                     value={fontSize}
                     onChange={(e) => setFontSize(parseInt(e.target.value))}
-                    className="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 text-[16px] sm:text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B7CD] min-h-[44px]"
                   >
                     <option value={9}>Small (9pt)</option>
                     <option value={11}>Standard (11pt)</option>
@@ -456,7 +456,7 @@ export const AddPageNumberPdf: React.FC = () => {
                   value={outputName}
                   onChange={(e) => setOutputName(e.target.value)}
                   placeholder="UAP_Numbered_Report.pdf"
-                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-slate-800 bg-white"
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B7CD] font-mono text-slate-800 bg-white"
                 />
               </div>
 
@@ -465,7 +465,7 @@ export const AddPageNumberPdf: React.FC = () => {
                 type="button"
                 onClick={handleProcessPdf}
                 disabled={isProcessing}
-                className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-xl text-sm font-semibold shadow-sm hover:shadow transition flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full py-3 px-4 bg-[#DF301C] hover:bg-[#C72412] active:bg-[#B01F0E] text-white rounded-xl text-sm font-bold shadow-xs transition flex items-center justify-center gap-2 disabled:opacity-50 min-h-[44px]"
               >
                 <Download className="w-4 h-4" />
                 {isProcessing ? 'Processing PDF...' : 'Add Page Numbers & Download'}

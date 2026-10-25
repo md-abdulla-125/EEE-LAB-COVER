@@ -26,16 +26,23 @@ export const CoverPagePreview = forwardRef<HTMLDivElement, CoverPagePreviewProps
 
     return (
       <div
-        className="flex justify-center items-center select-text transition-transform duration-200 origin-top"
-        style={{ transform: `scale(${zoom})`, transformOrigin: 'top center' }}
+        className="relative select-text transition-all duration-200 mx-auto my-auto shrink-0"
+        style={{
+          width: `${Math.round(794 * zoom)}px`,
+          height: `${Math.round(1123 * zoom)}px`,
+        }}
       >
         {/* A4 Sheet Container (Standard 210mm x 297mm, ratio 1:1.414) */}
         {/* Standard screen representation: 794px x 1123px at 96dpi */}
         <div
           id="cover-page-a4"
           ref={ref}
-          className="w-[794px] h-[1123px] bg-white shadow-2xl relative p-[36px] box-border text-black font-serif flex flex-col justify-between print:shadow-none print:m-0 print:p-[32px] print:w-full print:h-screen"
-          style={{ fontFamily: "'Times New Roman', 'Tinos', 'Georgia', serif" }}
+          className="w-[794px] h-[1123px] bg-white shadow-2xl absolute top-0 left-0 p-[36px] box-border text-black font-serif flex flex-col justify-between print:static print:p-[32px] print:w-full print:h-screen origin-top-left shrink-0"
+          style={{
+            fontFamily: "'Times New Roman', 'Tinos', 'Georgia', serif",
+            transform: `scale(${zoom})`,
+            transformOrigin: 'top left',
+          }}
         >
           {/* Outer Border Box inset */}
           <div
@@ -68,7 +75,6 @@ export const CoverPagePreview = forwardRef<HTMLDivElement, CoverPagePreviewProps
             </div>
 
             {/* Middle Section: Course Code, Title, Exp No, Exp Name, Dates */}
-            {/* Unified 215px label width ensures 100% straight vertical colon alignment */}
             <div className="my-auto px-6 py-2">
               <div className="space-y-3.5 text-[15px]">
                 {/* Course Code */}

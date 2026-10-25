@@ -13,8 +13,9 @@ import {
   PageBorderOffsetFrom,
 } from 'docx';
 import fileSaver from 'file-saver';
-import { CoverPageData } from '../types';
+import { CoverPageData, AssignmentCoverData } from '../types';
 import { getUapLogoPngBytes } from '../components/UapLogo';
+import { UAP_ALL_DEPARTMENTS } from '../data/assignmentData';
 
 function downloadDocxBlob(blob: Blob, fileName: string): void {
   try {
@@ -457,6 +458,390 @@ export async function exportToDocx(data: CoverPageData): Promise<void> {
   const cleanExp = (data.expNo || '01').replace(/[^a-zA-Z0-9_-]/g, '');
   const cleanId = (data.studentId || 'Report').replace(/[^a-zA-Z0-9_-]/g, '');
   const fileName = `UAP_CoverPage_${cleanCode}_Exp${cleanExp}_${cleanId}.docx`;
+
+  downloadDocxBlob(blob, fileName);
+}
+
+export async function exportAssignmentToDocx(data: AssignmentCoverData): Promise<void> {
+  let logoBytes: Uint8Array | null = null;
+  try {
+    logoBytes = await getUapLogoPngBytes();
+  } catch (e) {
+    console.warn('Could not generate logo for docx, proceeding without image:', e);
+  }
+
+  const borderSize = data.borderStyle === 'bold' ? 24 : data.borderStyle === 'double' ? 18 : 12;
+  const borderType =
+    data.borderStyle === 'double'
+      ? BorderStyle.DOUBLE
+      : data.borderStyle === 'bold'
+      ? BorderStyle.THICK
+      : data.borderStyle === 'none'
+      ? BorderStyle.NONE
+      : BorderStyle.SINGLE;
+
+  const noBorder = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' };
+  const tableBorders = {
+    top: noBorder,
+    bottom: noBorder,
+    left: noBorder,
+    right: noBorder,
+    insideHorizontal: noBorder,
+    insideVertical: noBorder,
+  };
+  const cellBorders = {
+    top: noBorder,
+    bottom: noBorder,
+    left: noBorder,
+    right: noBorder,
+  };
+
+  const createMiddleRow = (label: string, value: string, isBoldValue = false) => {
+    return new TableRow({
+      children: [
+        new TableCell({
+          width: { size: 32, type: WidthType.PERCENTAGE },
+          borders: cellBorders,
+          children: [
+            new Paragraph({
+              spacing: { before: 45, after: 45 },
+              children: [
+                new TextRun({
+                  text: label,
+                  bold: true,
+                  size: 23,
+                  font: 'Times New Roman',
+                }),
+              ],
+            }),
+          ],
+        }),
+        new TableCell({
+          width: { size: 4, type: WidthType.PERCENTAGE },
+          borders: cellBorders,
+          children: [
+            new Paragraph({
+              alignment: AlignmentType.CENTER,
+              spacing: { before: 45, after: 45 },
+              children: [
+                new TextRun({
+                  text: ':',
+                  bold: true,
+                  size: 23,
+                  font: 'Times New Roman',
+                }),
+              ],
+            }),
+          ],
+        }),
+        new TableCell({
+          width: { size: 64, type: WidthType.PERCENTAGE },
+          borders: cellBorders,
+          children: [
+            new Paragraph({
+              spacing: { before: 45, after: 45 },
+              children: [
+                new TextRun({
+                  text: value,
+                  bold: isBoldValue,
+                  size: 23,
+                  font: 'Times New Roman',
+                }),
+              ],
+            }),
+          ],
+        }),
+      ],
+    });
+  };
+
+  const createStudentRow = (label: string, value: string, isBold = false) => {
+    return new TableRow({
+      children: [
+        new TableCell({
+          width: { size: 36, type: WidthType.PERCENTAGE },
+          borders: cellBorders,
+          children: [
+            new Paragraph({
+              spacing: { before: 20, after: 20 },
+              children: [
+                new TextRun({
+                  text: label,
+                  bold: true,
+                  size: 21,
+                  font: 'Times New Roman',
+                }),
+              ],
+            }),
+          ],
+        }),
+        new TableCell({
+          width: { size: 6, type: WidthType.PERCENTAGE },
+          borders: cellBorders,
+          children: [
+            new Paragraph({
+              alignment: AlignmentType.CENTER,
+              spacing: { before: 20, after: 20 },
+              children: [
+                new TextRun({
+                  text: ':',
+                  bold: true,
+                  size: 21,
+                  font: 'Times New Roman',
+                }),
+              ],
+            }),
+          ],
+        }),
+        new TableCell({
+          width: { size: 58, type: WidthType.PERCENTAGE },
+          borders: cellBorders,
+          children: [
+            new Paragraph({
+              spacing: { before: 20, after: 20 },
+              children: [
+                new TextRun({
+                  text: value,
+                  bold: isBold,
+                  size: 21,
+                  font: 'Times New Roman',
+                }),
+              ],
+            }),
+          ],
+        }),
+      ],
+    });
+  };
+
+  const deptMatch = UAP_ALL_DEPARTMENTS.find(
+    (d) =>
+      d.shortCode.toLowerCase() === (data.department || '').toLowerCase() ||
+      d.id.toLowerCase() === (data.department || '').toLowerCase() ||
+      d.name.toLowerCase() === (data.department || '').toLowerCase()
+  );
+  const fullDeptName = deptMatch
+    ? deptMatch.fullDeptName.toUpperCase()
+    : data.department
+    ? `DEPARTMENT OF ${data.department.toUpperCase()}`
+    : 'DEPARTMENT OF ELECTRICAL AND ELECTRONIC ENGINEERING';
+
+  const courseName = data.courseName || data.courseTitle || 'Electrical Circuit';
+  const courseCode = data.courseCode || 'EEE 101';
+  const assignmentName = data.assignmentName || data.assignmentTopic || 'Assignment Name';
+  const academicSession = data.academicSession || 'Spring 2026';
+
+  const middleTable = new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    borders: tableBorders,
+    rows: [
+      createMiddleRow('COURSE NAME', courseName, true),
+      createMiddleRow('COURSE CODE', courseCode, true),
+      createMiddleRow('ASSIGNMENT NAME', assignmentName, false),
+      createMiddleRow('ACADEMIC SESSION', academicSession, true),
+      createMiddleRow('DATE OF SUBMISSION', data.submissionDate || '2026-10-24', false),
+    ],
+  });
+
+  const studentSubTable = new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    borders: tableBorders,
+    rows: [
+      createStudentRow('NAME', data.studentName || 'Md. Abdullah Sarkar Shihab', true),
+      createStudentRow('REGISTRATION ID', data.studentId || '24108116'),
+      createStudentRow('SECTION', data.section || 'C'),
+    ],
+  });
+
+  const submissionTable = new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    borders: tableBorders,
+    rows: [
+      new TableRow({
+        children: [
+          new TableCell({
+            width: { size: 54, type: WidthType.PERCENTAGE },
+            borders: cellBorders,
+            children: [
+              new Paragraph({
+                spacing: { before: 0, after: 70 },
+                children: [
+                  new TextRun({
+                    text: 'SUBMITTED BY:',
+                    bold: true,
+                    size: 23,
+                    font: 'Times New Roman',
+                  }),
+                ],
+              }),
+              studentSubTable,
+            ],
+          }),
+          new TableCell({
+            width: { size: 46, type: WidthType.PERCENTAGE },
+            borders: cellBorders,
+            children: [
+              new Paragraph({
+                spacing: { before: 0, after: 70 },
+                children: [
+                  new TextRun({
+                    text: 'SUBMITTED TO:',
+                    bold: true,
+                    size: 23,
+                    font: 'Times New Roman',
+                  }),
+                ],
+              }),
+              new Paragraph({
+                spacing: { before: 20, after: 20 },
+                children: [
+                  new TextRun({
+                    text: data.instructorName || 'Lecturer Name',
+                    bold: true,
+                    size: 22,
+                    font: 'Times New Roman',
+                  }),
+                ],
+              }),
+              new Paragraph({
+                spacing: { before: 15, after: 15 },
+                children: [
+                  new TextRun({
+                    text: data.instructorDesignation || 'Associate Professor',
+                    size: 21,
+                    font: 'Times New Roman',
+                  }),
+                ],
+              }),
+              new Paragraph({
+                spacing: { before: 15, after: 15 },
+                children: [
+                  new TextRun({
+                    text: data.instructorDepartment || 'Department of EEE',
+                    size: 21,
+                    font: 'Times New Roman',
+                  }),
+                ],
+              }),
+              new Paragraph({
+                spacing: { before: 15, after: 15 },
+                children: [
+                  new TextRun({
+                    text: 'UNIVERSITY OF ASIA PACIFIC',
+                    size: 20,
+                    font: 'Times New Roman',
+                  }),
+                ],
+              }),
+            ],
+          }),
+        ],
+      }),
+    ],
+  });
+
+  const doc = new Document({
+    sections: [
+      {
+        properties: {
+          page: {
+            margin: { top: 720, bottom: 720, left: 720, right: 720 },
+            borders:
+              data.borderStyle === 'none'
+                ? undefined
+                : {
+                    pageBorders: {
+                      offsetFrom: PageBorderOffsetFrom.PAGE,
+                    },
+                    pageBorderTop: { style: borderType, size: borderSize, color: '000000', space: 24 },
+                    pageBorderRight: { style: borderType, size: borderSize, color: '000000', space: 24 },
+                    pageBorderBottom: { style: borderType, size: borderSize, color: '000000', space: 24 },
+                    pageBorderLeft: { style: borderType, size: borderSize, color: '000000', space: 24 },
+                  },
+          },
+        },
+        children: [
+          ...(logoBytes
+            ? [
+                new Paragraph({
+                  alignment: AlignmentType.CENTER,
+                  spacing: { before: 60, after: 100 },
+                  children: [
+                    new ImageRun({
+                      data: logoBytes,
+                      transformation: {
+                        width: 95,
+                        height: 95,
+                      },
+                      type: 'png',
+                    }),
+                  ],
+                }),
+              ]
+            : [
+                new Paragraph({
+                  alignment: AlignmentType.CENTER,
+                  spacing: { before: 100, after: 100 },
+                  children: [
+                    new TextRun({
+                      text: '[ UAP EMBLEM ]',
+                      bold: true,
+                      size: 24,
+                    }),
+                  ],
+                }),
+              ]),
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            spacing: { before: 0, after: 50 },
+            children: [
+              new TextRun({
+                text: data.universityName || 'UNIVERSITY OF ASIA PACIFIC',
+                bold: true,
+                size: 36,
+                font: 'Times New Roman',
+              }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            spacing: { before: 0, after: 60 },
+            children: [
+              new TextRun({
+                text: fullDeptName,
+                bold: true,
+                size: 26,
+                font: 'Times New Roman',
+              }),
+            ],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            spacing: { before: 20, after: 280 },
+            children: [
+              new TextRun({
+                text: `ASSIGNMENT – ${academicSession.toUpperCase()}`,
+                bold: true,
+                size: 26,
+                font: 'Times New Roman',
+              }),
+            ],
+          }),
+          middleTable,
+          new Paragraph({
+            spacing: { before: 220, after: 80 },
+            children: [],
+          }),
+          submissionTable,
+        ],
+      },
+    ],
+  });
+
+  const blob = await Packer.toBlob(doc);
+  const cleanCode = (data.courseCode || 'Assignment').replace(/[^a-zA-Z0-9_-]/g, '_');
+  const cleanId = (data.studentId || '24108116').replace(/[^a-zA-Z0-9_-]/g, '');
+  const fileName = `UAP_Assignment_${cleanCode}_${cleanId}.docx`;
 
   downloadDocxBlob(blob, fileName);
 }

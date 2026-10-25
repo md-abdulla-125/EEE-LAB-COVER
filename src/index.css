@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+@theme {
+  --color-palette-red: #DF301C;
+  --color-palette-orange: #FF9100;
+  --color-palette-cream: #FFF1D1;
+  --color-palette-teal: #00B7CD;
+}
+
 @media print {
   @page {
     size: A4 portrait;
