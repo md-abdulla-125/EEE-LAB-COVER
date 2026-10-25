@@ -667,17 +667,6 @@ export default function App() {
                 </button>
               </div>
             )}
-
-            {/* Side Panel Toggle Button */}
-            <button
-              type="button"
-              onClick={() => setIsMobileMenuOpen(true)}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 bg-black/20 hover:bg-black/30 active:bg-black/40 rounded-xl text-white font-bold text-xs transition border border-white/20"
-              title="Browse all academic tools"
-            >
-              <Menu className="w-4 h-4" />
-              <span className="hidden sm:inline">All Tools</span>
-            </button>
           </div>
         </div>
       </header>
