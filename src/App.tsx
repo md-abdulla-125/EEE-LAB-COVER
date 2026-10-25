@@ -32,6 +32,7 @@ import { AddPageNumberPdf } from './components/AddPageNumberPdf';
 import { MergePdf } from './components/MergePdf';
 import { ImageToPdf } from './components/ImageToPdf';
 import { PdfCutter } from './components/PdfCutter';
+import { CookieConsent } from './components/CookieConsent';
 
 export default function App() {
   // 1. Assignment Cover State
@@ -989,11 +990,23 @@ export default function App() {
           <p>
             University of Asia Pacific (UAP) • Academic Tools & Cover Page Maker
           </p>
-          <p className="text-slate-400">
-            Compliant with official Department of CSE & EEE academic standards
-          </p>
+          <div className="flex items-center gap-3 text-slate-400">
+            <span>Compliant with official Department of CSE & EEE academic standards</span>
+            <span>•</span>
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new CustomEvent('open-cookie-settings'))}
+              className="text-slate-500 hover:text-slate-800 underline transition hover:cursor-pointer flex items-center gap-1"
+              title="Change cookie & storage preferences"
+            >
+              <span>Cookie Settings</span>
+            </button>
+          </div>
         </div>
       </footer>
+
+      {/* Cookie Consent Notification */}
+      <CookieConsent />
     </div>
   );
 }
