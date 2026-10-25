@@ -16,15 +16,18 @@ import {
   Menu,
   X,
 } from 'lucide-react';
-import { CoverPageData, AssignmentCoverData } from './types';
+import { CoverPageData, AssignmentCoverData, CtCoverData } from './types';
 import { DEFAULT_COVER_DATA } from './data/defaultData';
 import { DEFAULT_ASSIGNMENT_DATA } from './data/assignmentData';
+import { DEFAULT_CT_DATA } from './data/ctData';
 import { EditorForm } from './components/EditorForm';
 import { CoverPagePreview } from './components/CoverPagePreview';
 import { AssignmentCoverForm } from './components/AssignmentCoverForm';
 import { AssignmentCoverPreview } from './components/AssignmentCoverPreview';
-import { exportToDocx, exportAssignmentToDocx } from './utils/docxExport';
-import { exportToPdf, exportAssignmentToPdf, printCoverPage, generateCoverPdfBlob } from './utils/pdfExport';
+import { CtCoverForm } from './components/CtCoverForm';
+import { CtCoverPreview } from './components/CtCoverPreview';
+import { exportToDocx, exportAssignmentToDocx, exportCtToDocx } from './utils/docxExport';
+import { exportToPdf, exportAssignmentToPdf, exportCtToPdf, printCoverPage, generateCoverPdfBlob } from './utils/pdfExport';
 import { AddPageNumberPdf } from './components/AddPageNumberPdf';
 import { MergePdf } from './components/MergePdf';
 import { ImageToPdf } from './components/ImageToPdf';
@@ -64,7 +67,20 @@ export default function App() {
     return DEFAULT_COVER_DATA;
   });
 
-  const [activeSection, setActiveSection] = useState<'assignment' | 'pagenum' | 'merge' | 'imagetopdf' | 'cover' | 'cutter'>('assignment');
+  // 7. CT Cover State
+  const [ctData, setCtData] = useState<CtCoverData>(() => {
+    try {
+      const saved = localStorage.getItem('uap_ct_cover_data');
+      if (saved) {
+        return { ...DEFAULT_CT_DATA, ...JSON.parse(saved) };
+      }
+    } catch {
+      // ignore
+    }
+    return DEFAULT_CT_DATA;
+  });
+
+  const [activeSection, setActiveSection] = useState<'assignment' | 'pagenum' | 'merge' | 'imagetopdf' | 'cover' | 'cutter' | 'ctcover'>('assignment');
   const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [zoom, setZoom] = useState<number>(() => {
@@ -79,6 +95,7 @@ export default function App() {
 
   const previewRef = useRef<HTMLDivElement>(null);
   const assignmentPreviewRef = useRef<HTMLDivElement>(null);
+  const ctPreviewRef = useRef<HTMLDivElement>(null);
 
   // Close mobile drawer on Escape key
   useEffect(() => {
@@ -106,12 +123,17 @@ export default function App() {
   };
 
   const handleGetCoverPagePdfBlob = async (): Promise<Blob | null> => {
-    const targetRef = activeSection === 'cover' ? previewRef.current : (assignmentPreviewRef.current || previewRef.current);
+    const targetRef =
+      activeSection === 'cover'
+        ? previewRef.current
+        : activeSection === 'ctcover'
+        ? ctPreviewRef.current
+        : (assignmentPreviewRef.current || previewRef.current);
     if (!targetRef) return null;
     return await generateCoverPdfBlob(targetRef);
   };
 
-  // Auto-save student persistent fields for both Assignment and Lab
+  // Auto-save student persistent fields for Assignment, Lab, and CT Cover
   useEffect(() => {
     try {
       localStorage.setItem('uap_assignment_cover_data', JSON.stringify(assignmentData));
@@ -127,6 +149,14 @@ export default function App() {
       // ignore
     }
   }, [data]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('uap_ct_cover_data', JSON.stringify(ctData));
+    } catch {
+      // ignore
+    }
+  }, [ctData]);
 
   const showToast = (type: 'success' | 'error', text: string) => {
     setToastMessage({ type, text });
@@ -194,6 +224,38 @@ export default function App() {
     } catch (err) {
       console.error('PDF export failed:', err);
       showToast('error', 'Failed to generate PDF. You can also use the "Print / Save as PDF" button.');
+    } finally {
+      setIsExportingPdf(false);
+    }
+  };
+
+  // CT Cover exports
+  const handleExportCtDocx = async () => {
+    try {
+      setIsExportingDocx(true);
+      await exportCtToDocx(ctData);
+      showToast('success', 'Class Test (CT) Word (.docx) downloaded successfully!');
+    } catch (err) {
+      console.error('Docx export failed:', err);
+      showToast('error', 'Failed to generate CT Word document. Please try again.');
+    } finally {
+      setIsExportingDocx(false);
+    }
+  };
+
+  const handleExportCtPdf = async () => {
+    const element = ctPreviewRef.current || document.getElementById('ct-cover-page-a4');
+    if (!element) {
+      showToast('error', 'Preview element not found.');
+      return;
+    }
+    try {
+      setIsExportingPdf(true);
+      await exportCtToPdf(element, ctData);
+      showToast('success', 'Class Test (CT) PDF downloaded successfully!');
+    } catch (err) {
+      console.error('PDF export failed:', err);
+      showToast('error', 'Failed to generate CT PDF. You can also use the "Print / Save as PDF" button.');
     } finally {
       setIsExportingPdf(false);
     }
@@ -404,6 +466,27 @@ export default function App() {
             </div>
           </button>
 
+          {/* 7. CT Cover */}
+          <button
+            type="button"
+            onClick={() => {
+              setActiveSection('ctcover');
+              setIsMobileMenuOpen(false);
+            }}
+            className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-semibold transition text-left min-h-[48px] ${
+              activeSection === 'ctcover'
+                ? 'bg-[#FFF1D1] text-[#DF301C] shadow-xs border-l-4 border-[#00B7CD]'
+                : 'text-slate-700 hover:bg-[#FAF7EE] hover:text-[#DF301C] border-l-4 border-transparent'
+            }`}
+          >
+            <div className={`p-2 rounded-lg ${activeSection === 'ctcover' ? 'bg-[#DF301C] text-white' : 'bg-slate-100 text-slate-600'}`}>
+              <FileText className="w-4 h-4" />
+            </div>
+            <div className="flex-1">
+              <div className="font-bold text-xs">7. CT Cover</div>
+            </div>
+          </button>
+
         </div>
 
         {/* Drawer Footer */}
@@ -536,12 +619,26 @@ export default function App() {
               <Scissors className="w-3.5 h-3.5" />
               <span>6. PDF Cutter</span>
             </button>
+
+            <button
+              type="button"
+              id="section-nav-ctcover"
+              onClick={() => setActiveSection('ctcover')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition min-h-[36px] ${
+                activeSection === 'ctcover'
+                  ? 'bg-[#00B7CD] text-white shadow-xs'
+                  : 'text-white/90 hover:bg-white/15 hover:text-white'
+              }`}
+            >
+              <FileText className="w-3.5 h-3.5" />
+              <span>7. CT Cover</span>
+            </button>
           </nav>
 
           {/* Right Action Items */}
           <div className="flex items-center gap-2">
             {/* Mobile/Tablet Preview/Editor Toggle */}
-            {(activeSection === 'assignment' || activeSection === 'cover') && (
+            {(activeSection === 'assignment' || activeSection === 'cover' || activeSection === 'ctcover') && (
               <div className="lg:hidden flex items-center bg-black/20 p-0.5 rounded-xl border border-white/20">
                 <button
                   type="button"
@@ -790,6 +887,99 @@ export default function App() {
         {/* 6. PDF Cutter Section */}
         {activeSection === 'cutter' && (
           <PdfCutter />
+        )}
+
+        {/* 7. CT Cover Section */}
+        {activeSection === 'ctcover' && (
+          <div className="lg:grid lg:grid-cols-12 lg:gap-8 items-start">
+            {/* Left Column: Form Controls */}
+            <div className={`lg:col-span-6 xl:col-span-5 no-print ${activeTab === 'preview' ? 'hidden lg:block' : 'block'}`}>
+              <CtCoverForm
+                data={ctData}
+                onChange={setCtData}
+                onExportDocx={handleExportCtDocx}
+                onExportPdf={handleExportCtPdf}
+                onPrint={handlePrint}
+                isExportingDocx={isExportingDocx}
+                isExportingPdf={isExportingPdf}
+              />
+            </div>
+
+            {/* Right Column: Live A4 Preview */}
+            <div className={`lg:col-span-6 xl:col-span-7 ${activeTab === 'editor' ? 'hidden lg:block' : 'block'}`}>
+              {/* Preview Toolbar */}
+              <div className="bg-white rounded-t-xl border border-slate-200 border-b-0 p-3 flex flex-wrap items-center justify-between gap-2 no-print shadow-xs">
+                <div className="flex items-center gap-2">
+                  <span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span className="text-xs font-semibold text-slate-800">
+                    Live A4 Class Test (CT) Preview
+                  </span>
+                  <span className="text-[11px] text-slate-400 hidden sm:inline">
+                    (210mm × 297mm)
+                  </span>
+                </div>
+
+                {/* Action buttons & Zoom Controls */}
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1 bg-slate-50 p-1 rounded-lg border border-slate-200">
+                    <button
+                      type="button"
+                      onClick={() => setZoom((z) => Math.max(0.4, Number((z - 0.08).toFixed(2))))}
+                      className="p-1 text-slate-600 hover:bg-white hover:shadow-xs rounded transition"
+                      title="Zoom Out"
+                    >
+                      <ZoomOut className="w-3.5 h-3.5" />
+                    </button>
+                    <span className="text-xs font-medium text-slate-700 min-w-10 text-center font-mono">
+                      {Math.round(zoom * 100)}%
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setZoom((z) => Math.min(1.1, Number((z + 0.08).toFixed(2))))}
+                      className="p-1 text-slate-600 hover:bg-white hover:shadow-xs rounded transition"
+                      title="Zoom In"
+                    >
+                      <ZoomIn className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setZoom(0.68)}
+                      className="px-1.5 py-0.5 text-[11px] font-medium text-slate-600 hover:bg-white hover:shadow-xs rounded transition border border-transparent hover:border-slate-200"
+                      title="Fit to Container"
+                    >
+                      Fit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setZoom(1)}
+                      className="px-1.5 py-0.5 text-[11px] font-medium text-slate-600 hover:bg-white hover:shadow-xs rounded transition border border-transparent hover:border-slate-200"
+                      title="100% Actual Size"
+                    >
+                      100%
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* A4 Paper Canvas Viewport */}
+              <div className="bg-slate-200/90 rounded-b-xl border border-slate-300/80 p-4 sm:p-8 overflow-auto flex items-center justify-center shadow-inner min-h-[500px]">
+                <div className="relative flex items-center justify-center my-auto mx-auto">
+                  <CtCoverPreview ref={ctPreviewRef} data={ctData} zoom={zoom} />
+                </div>
+              </div>
+
+              {/* Quick Info bar underneath preview */}
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 no-print">
+                <div className="flex items-center gap-2">
+                  <span>Format:</span>
+                  <span className="font-semibold text-slate-700">A4 Portrait Standard</span>
+                  <span>•</span>
+                  <span>Font:</span>
+                  <span className="font-semibold text-slate-700">Times New Roman</span>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
       </main>
 

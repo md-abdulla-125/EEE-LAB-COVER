@@ -42,6 +42,23 @@ export interface AssignmentCoverData {
   reportType?: string;
 }
 
+export interface CtCoverData {
+  universityName: string;
+  department: string;
+  ctNumber: string;
+  courseCode: string;
+  courseTitle: string;
+  studentName: string;
+  studentId: string;
+  section: string;
+  semester: string;
+  date: string;
+  instructorName: string;
+  instructorDesignation: string;
+  instructorDepartment: string;
+  borderStyle: 'single' | 'double' | 'bold' | 'none';
+}
+
 export interface PresetExperiment {
   no: string;
   name: string;
