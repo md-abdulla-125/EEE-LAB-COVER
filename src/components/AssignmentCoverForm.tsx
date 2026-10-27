@@ -246,7 +246,7 @@ export const AssignmentCoverForm: React.FC<AssignmentCoverFormProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Registration ID
+                  Reg. No. (Registration Number)
                 </label>
                 <input
                   type="text"
@@ -310,8 +310,20 @@ export const AssignmentCoverForm: React.FC<AssignmentCoverFormProps> = ({
                   value={data.instructorDesignation || ''}
                   onChange={(e) => updateField('instructorDesignation', e.target.value)}
                   placeholder="e.g. Associate Professor"
-                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-[16px] sm:text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#00B7CD]/20 focus:border-[#00B7CD] transition min-h-[44px]"
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-[16px] sm:text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#00B7CD]/20 focus:border-[#00B7CD] transition min-h-[44px] mb-1.5"
                 />
+                <div className="flex flex-wrap gap-1">
+                  {['Lecturer', 'Asst. Professor', 'Assoc. Professor', 'Professor'].map((d) => (
+                    <button
+                      key={d}
+                      type="button"
+                      onClick={() => updateField('instructorDesignation', d)}
+                      className="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 hover:bg-[#FFF1D1] hover:text-[#DF301C] text-slate-600 font-medium transition"
+                    >
+                      {d}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <div>

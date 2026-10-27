@@ -5,9 +5,12 @@ import {
   User,
   Download,
   BookOpen,
+  GraduationCap,
+  Building2,
 } from 'lucide-react';
 import { CtCoverData } from '../types';
 import { DEFAULT_CT_DATA } from '../data/ctData';
+import { UAP_ALL_DEPARTMENTS } from '../data/assignmentData';
 
 interface CtCoverFormProps {
   data: CtCoverData;
@@ -49,6 +52,14 @@ export const CtCoverForm: React.FC<CtCoverFormProps> = ({
     updateField('date', formatted);
   };
 
+  const handleDepartmentPreset = (deptFullName: string, shortCode: string) => {
+    onChange({
+      ...data,
+      department: deptFullName.toUpperCase(),
+      instructorDepartment: `Department of ${shortCode}`,
+    });
+  };
+
   return (
     <div className="bg-white rounded-2xl border border-[#FFE4B5] shadow-xs p-5 space-y-5">
       {/* Header and Download Action Row */}
@@ -81,6 +92,45 @@ export const CtCoverForm: React.FC<CtCoverFormProps> = ({
             <Download className="w-4 h-4" />
             <span>{isExportingPdf ? 'Generating PDF...' : 'Download PDF'}</span>
           </button>
+        </div>
+      </div>
+
+      {/* University & Department Info */}
+      <div>
+        <div className="flex items-center gap-2 mb-3 pb-1.5 border-b border-slate-100">
+          <Building2 className="w-4 h-4 text-[#DF301C]" />
+          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+            Department & University
+          </h3>
+        </div>
+
+        <div className="space-y-3">
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              Department Name
+            </label>
+            <input
+              type="text"
+              value={data.department}
+              onChange={(e) => updateField('department', e.target.value)}
+              placeholder="DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING"
+              className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B7CD] font-semibold text-slate-900 uppercase"
+            />
+          </div>
+
+          {/* Quick Department Presets */}
+          <div className="flex flex-wrap gap-1.5">
+            {UAP_ALL_DEPARTMENTS.slice(0, 5).map((dept) => (
+              <button
+                key={dept.id}
+                type="button"
+                onClick={() => handleDepartmentPreset(dept.name, dept.shortCode)}
+                className="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 hover:bg-[#FFF1D1] hover:text-[#DF301C] text-slate-700 font-medium transition"
+              >
+                {dept.shortCode}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -227,6 +277,114 @@ export const CtCoverForm: React.FC<CtCoverFormProps> = ({
               className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B7CD] text-slate-800"
             />
           </div>
+        </div>
+      </div>
+
+      {/* 3. Submitted to (Lecturer) */}
+      <div>
+        <div className="flex items-center gap-2 mb-3 pb-1.5 border-b border-slate-100">
+          <GraduationCap className="w-4 h-4 text-[#DF301C]" />
+          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+            3. Submitted to (Lecturer)
+          </h3>
+        </div>
+
+        <div className="space-y-3">
+          {/* Lecturer Name */}
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
+              Lecturer Name
+            </label>
+            <input
+              type="text"
+              value={data.instructorName || ''}
+              onChange={(e) => updateField('instructorName', e.target.value)}
+              placeholder="e.g. Dr. Muhammad Mominur Rahman"
+              className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B7CD] font-semibold text-slate-900"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {/* Designation */}
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Designation
+              </label>
+              <input
+                type="text"
+                value={data.instructorDesignation || ''}
+                onChange={(e) => updateField('instructorDesignation', e.target.value)}
+                placeholder="e.g. Lecturer"
+                className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B7CD] font-medium text-slate-800 mb-1.5"
+              />
+              <div className="flex flex-wrap gap-1">
+                {['Lecturer', 'Asst. Professor', 'Assoc. Professor', 'Professor'].map((d) => (
+                  <button
+                    key={d}
+                    type="button"
+                    onClick={() => updateField('instructorDesignation', d)}
+                    className="text-[10px] px-1.5 py-0.5 rounded-md bg-slate-100 hover:bg-[#FFF1D1] hover:text-[#DF301C] text-slate-600 font-medium transition"
+                  >
+                    {d}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Department */}
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Department
+              </label>
+              <input
+                type="text"
+                value={data.instructorDepartment || ''}
+                onChange={(e) => updateField('instructorDepartment', e.target.value)}
+                placeholder="e.g. Department of CSE"
+                className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B7CD] font-medium text-slate-800 mb-1.5"
+              />
+              <div className="flex flex-wrap gap-1">
+                {['Department of CSE', 'Department of EEE', 'Department of CE', 'Department of Pharmacy'].map((dept) => (
+                  <button
+                    key={dept}
+                    type="button"
+                    onClick={() => updateField('instructorDepartment', dept)}
+                    className="text-[10px] px-1.5 py-0.5 rounded-md bg-slate-100 hover:bg-[#FFF1D1] hover:text-[#DF301C] text-slate-600 font-medium transition"
+                  >
+                    {dept.replace('Department of ', '')}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 4. Page Border Style */}
+      <div className="pt-1">
+        <label className="block text-xs font-semibold text-slate-700 mb-2">
+          Page Border Style
+        </label>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          {[
+            { id: 'single', label: 'Single Border' },
+            { id: 'double', label: 'Double Border' },
+            { id: 'bold', label: 'Bold Border' },
+            { id: 'none', label: 'No Border' },
+          ].map((style) => (
+            <button
+              key={style.id}
+              type="button"
+              onClick={() => updateField('borderStyle', style.id as CtCoverData['borderStyle'])}
+              className={`min-h-[38px] py-1.5 px-2.5 rounded-xl border text-xs font-semibold text-center transition ${
+                data.borderStyle === style.id
+                  ? 'border-[#00B7CD] bg-[#FFF1D1] text-[#DF301C] shadow-xs'
+                  : 'border-slate-200 bg-slate-50 hover:bg-[#FFF1D1]/40 text-slate-700 active:bg-slate-100'
+              }`}
+            >
+              {style.label}
+            </button>
+          ))}
         </div>
       </div>
     </div>

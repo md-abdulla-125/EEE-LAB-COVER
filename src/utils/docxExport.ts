@@ -648,7 +648,7 @@ export async function exportAssignmentToDocx(data: AssignmentCoverData): Promise
     borders: tableBorders,
     rows: [
       createStudentRow('NAME', data.studentName || 'Md. Abdullah Sarkar Shihab', true),
-      createStudentRow('REGISTRATION ID', data.studentId || '24108116'),
+      createStudentRow('REG. NO.', data.studentId || '24108116'),
       createStudentRow('SECTION', data.section || 'C'),
     ],
   });

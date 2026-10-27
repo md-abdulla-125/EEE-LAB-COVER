@@ -184,7 +184,7 @@ export const AssignmentCoverPreview = forwardRef<HTMLDivElement, AssignmentCover
 
                   <div className="flex items-baseline">
                     <span className="w-28 font-bold uppercase inline-block shrink-0">
-                      REGISTRATION ID
+                      REG. NO.
                     </span>
                     <span className="w-5 font-bold text-center shrink-0">:</span>
                     <span className="font-normal font-mono text-[14px] flex-1">
