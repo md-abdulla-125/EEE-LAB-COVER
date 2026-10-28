@@ -1025,13 +1025,13 @@ export async function exportCtToDocx(data: CtCoverData): Promise<void> {
   });
 
   const submissionTable = new Table({
-    width: { size: 100, type: WidthType.PERCENTAGE },
+    width: { size: 60, type: WidthType.PERCENTAGE },
     borders: tableBorders,
     rows: [
       new TableRow({
         children: [
           new TableCell({
-            width: { size: 54, type: WidthType.PERCENTAGE },
+            width: { size: 100, type: WidthType.PERCENTAGE },
             borders: cellBorders,
             children: [
               new Paragraph({
@@ -1046,64 +1046,6 @@ export async function exportCtToDocx(data: CtCoverData): Promise<void> {
                 ],
               }),
               studentSubTable,
-            ],
-          }),
-          new TableCell({
-            width: { size: 46, type: WidthType.PERCENTAGE },
-            borders: cellBorders,
-            children: [
-              new Paragraph({
-                spacing: { before: 0, after: 70 },
-                children: [
-                  new TextRun({
-                    text: 'SUBMITTED TO:',
-                    bold: true,
-                    size: 23,
-                    font: 'Times New Roman',
-                  }),
-                ],
-              }),
-              new Paragraph({
-                spacing: { before: 20, after: 20 },
-                children: [
-                  new TextRun({
-                    text: data.instructorName || 'Lecturer Name',
-                    bold: true,
-                    size: 22,
-                    font: 'Times New Roman',
-                  }),
-                ],
-              }),
-              new Paragraph({
-                spacing: { before: 15, after: 15 },
-                children: [
-                  new TextRun({
-                    text: data.instructorDesignation || 'Lecturer',
-                    size: 21,
-                    font: 'Times New Roman',
-                  }),
-                ],
-              }),
-              new Paragraph({
-                spacing: { before: 15, after: 15 },
-                children: [
-                  new TextRun({
-                    text: data.instructorDepartment || 'Department of CSE',
-                    size: 21,
-                    font: 'Times New Roman',
-                  }),
-                ],
-              }),
-              new Paragraph({
-                spacing: { before: 15, after: 15 },
-                children: [
-                  new TextRun({
-                    text: 'UNIVERSITY OF ASIA PACIFIC',
-                    size: 20,
-                    font: 'Times New Roman',
-                  }),
-                ],
-              }),
             ],
           }),
         ],

@@ -136,11 +136,10 @@ export const CtCoverPreview = forwardRef<HTMLDivElement, CtCoverPreviewProps>(
               </div>
             </div>
 
-            {/* Bottom Section: SUBMITTED BY & SUBMITTED TO */}
+            {/* Bottom Section: SUBMITTED BY */}
             <div className="pt-2 pb-1 px-6">
-              <div className="grid grid-cols-12 gap-8 items-start border-t border-black/30 pt-4">
-                {/* Left Column: SUBMITTED BY */}
-                <div className="col-span-7 space-y-1.5 text-[14.5px]">
+              <div className="border-t border-black/30 pt-4">
+                <div className="space-y-1.5 text-[15px] max-w-md">
                   <p className="font-bold text-[15px] uppercase tracking-wider mb-2 pb-0.5 border-b border-black/40 inline-block">
                     SUBMITTED BY:
                   </p>
@@ -166,26 +165,6 @@ export const CtCoverPreview = forwardRef<HTMLDivElement, CtCoverPreviewProps>(
                     <span className="w-5 font-bold text-center shrink-0">:</span>
                     <span className="font-medium">{section}</span>
                   </div>
-                </div>
-
-                {/* Right Column: SUBMITTED TO */}
-                <div className="col-span-5 space-y-1 text-[14.5px]">
-                  <p className="font-bold text-[15px] uppercase tracking-wider mb-2 pb-0.5 border-b border-black/40 inline-block">
-                    SUBMITTED TO:
-                  </p>
-
-                  <p className="font-bold text-[15px] text-black leading-tight">
-                    {data.instructorName || 'Lecturer Name'}
-                  </p>
-                  <p className="font-normal text-[14px] text-slate-900 leading-tight">
-                    {data.instructorDesignation || 'Lecturer'}
-                  </p>
-                  <p className="font-normal text-[14px] text-slate-900 leading-tight">
-                    {data.instructorDepartment || 'Department of CSE'}
-                  </p>
-                  <p className="font-normal text-[13.5px] text-slate-800 leading-tight pt-0.5">
-                    UNIVERSITY OF ASIA PACIFIC
-                  </p>
                 </div>
               </div>
             </div>

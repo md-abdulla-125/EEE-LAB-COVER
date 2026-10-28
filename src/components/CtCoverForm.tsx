@@ -5,7 +5,6 @@ import {
   User,
   Download,
   BookOpen,
-  GraduationCap,
   Building2,
 } from 'lucide-react';
 import { CtCoverData } from '../types';
@@ -280,90 +279,10 @@ export const CtCoverForm: React.FC<CtCoverFormProps> = ({
         </div>
       </div>
 
-      {/* 3. Submitted to (Lecturer) */}
-      <div>
-        <div className="flex items-center gap-2 mb-3 pb-1.5 border-b border-slate-100">
-          <GraduationCap className="w-4 h-4 text-[#DF301C]" />
-          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-            3. Submitted to (Lecturer)
-          </h3>
-        </div>
-
-        <div className="space-y-3">
-          {/* Lecturer Name */}
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Lecturer Name
-            </label>
-            <input
-              type="text"
-              value={data.instructorName || ''}
-              onChange={(e) => updateField('instructorName', e.target.value)}
-              placeholder="e.g. Dr. Muhammad Mominur Rahman"
-              className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B7CD] font-semibold text-slate-900"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {/* Designation */}
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Designation
-              </label>
-              <input
-                type="text"
-                value={data.instructorDesignation || ''}
-                onChange={(e) => updateField('instructorDesignation', e.target.value)}
-                placeholder="e.g. Lecturer"
-                className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B7CD] font-medium text-slate-800 mb-1.5"
-              />
-              <div className="flex flex-wrap gap-1">
-                {['Lecturer', 'Asst. Professor', 'Assoc. Professor', 'Professor'].map((d) => (
-                  <button
-                    key={d}
-                    type="button"
-                    onClick={() => updateField('instructorDesignation', d)}
-                    className="text-[10px] px-1.5 py-0.5 rounded-md bg-slate-100 hover:bg-[#FFF1D1] hover:text-[#DF301C] text-slate-600 font-medium transition"
-                  >
-                    {d}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Department */}
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Department
-              </label>
-              <input
-                type="text"
-                value={data.instructorDepartment || ''}
-                onChange={(e) => updateField('instructorDepartment', e.target.value)}
-                placeholder="e.g. Department of CSE"
-                className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00B7CD] font-medium text-slate-800 mb-1.5"
-              />
-              <div className="flex flex-wrap gap-1">
-                {['Department of CSE', 'Department of EEE', 'Department of CE', 'Department of Pharmacy'].map((dept) => (
-                  <button
-                    key={dept}
-                    type="button"
-                    onClick={() => updateField('instructorDepartment', dept)}
-                    className="text-[10px] px-1.5 py-0.5 rounded-md bg-slate-100 hover:bg-[#FFF1D1] hover:text-[#DF301C] text-slate-600 font-medium transition"
-                  >
-                    {dept.replace('Department of ', '')}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 4. Page Border Style */}
+      {/* 3. Page Border Style */}
       <div className="pt-1">
         <label className="block text-xs font-semibold text-slate-700 mb-2">
-          Page Border Style
+          3. Page Border Style
         </label>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {[
