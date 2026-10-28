@@ -15,23 +15,25 @@ import {
   BookOpen,
   Menu,
   X,
-  Calculator,
+  FileCheck,
 } from 'lucide-react';
-import { CoverPageData, AssignmentCoverData } from './types';
+import { CoverPageData, AssignmentCoverData, CtCoverData } from './types';
 import { DEFAULT_COVER_DATA } from './data/defaultData';
 import { DEFAULT_ASSIGNMENT_DATA } from './data/assignmentData';
+import { DEFAULT_CT_DATA } from './data/ctData';
 import { EditorForm } from './components/EditorForm';
 import { CoverPagePreview } from './components/CoverPagePreview';
 import { AssignmentCoverForm } from './components/AssignmentCoverForm';
 import { AssignmentCoverPreview } from './components/AssignmentCoverPreview';
-import { exportToDocx, exportAssignmentToDocx } from './utils/docxExport';
-import { exportToPdf, exportAssignmentToPdf, printCoverPage, generateCoverPdfBlob } from './utils/pdfExport';
+import { CtCoverForm } from './components/CtCoverForm';
+import { CtCoverPreview } from './components/CtCoverPreview';
+import { exportToDocx, exportAssignmentToDocx, exportCtToDocx } from './utils/docxExport';
+import { exportToPdf, exportAssignmentToPdf, exportCtToPdf, printCoverPage, generateCoverPdfBlob } from './utils/pdfExport';
 import { AddPageNumberPdf } from './components/AddPageNumberPdf';
 import { MergePdf } from './components/MergePdf';
 import { ImageToPdf } from './components/ImageToPdf';
 import { PdfCutter } from './components/PdfCutter';
 import { CookieConsent } from './components/CookieConsent';
-import { CgpaCalculator } from './components/CgpaCalculator';
 
 export default function App() {
   // 1. Assignment Cover State
@@ -67,7 +69,20 @@ export default function App() {
     return DEFAULT_COVER_DATA;
   });
 
-  const [activeSection, setActiveSection] = useState<'assignment' | 'pagenum' | 'merge' | 'imagetopdf' | 'cover' | 'cutter' | 'cgpa'>('assignment');
+  // 7. CT Cover State
+  const [ctData, setCtData] = useState<CtCoverData>(() => {
+    try {
+      const saved = localStorage.getItem('uap_ct_cover_data');
+      if (saved) {
+        return { ...DEFAULT_CT_DATA, ...JSON.parse(saved) };
+      }
+    } catch {
+      // ignore
+    }
+    return DEFAULT_CT_DATA;
+  });
+
+  const [activeSection, setActiveSection] = useState<'assignment' | 'pagenum' | 'merge' | 'imagetopdf' | 'cover' | 'cutter' | 'ct'>('assignment');
   const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [zoom, setZoom] = useState<number>(() => {
@@ -82,6 +97,7 @@ export default function App() {
 
   const previewRef = useRef<HTMLDivElement>(null);
   const assignmentPreviewRef = useRef<HTMLDivElement>(null);
+  const ctPreviewRef = useRef<HTMLDivElement>(null);
 
   // Close mobile drawer on Escape key
   useEffect(() => {
@@ -112,12 +128,14 @@ export default function App() {
     const targetRef =
       activeSection === 'cover'
         ? previewRef.current
+        : activeSection === 'ct'
+        ? ctPreviewRef.current
         : (assignmentPreviewRef.current || previewRef.current);
     if (!targetRef) return null;
     return await generateCoverPdfBlob(targetRef);
   };
 
-  // Auto-save student persistent fields for Assignment and Lab Cover
+  // Auto-save student persistent fields for Assignment, Lab, and CT Cover
   useEffect(() => {
     try {
       localStorage.setItem('uap_assignment_cover_data', JSON.stringify(assignmentData));
@@ -133,6 +151,14 @@ export default function App() {
       // ignore
     }
   }, [data]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('uap_ct_cover_data', JSON.stringify(ctData));
+    } catch {
+      // ignore
+    }
+  }, [ctData]);
 
   const showToast = (type: 'success' | 'error', text: string) => {
     setToastMessage({ type, text });
@@ -197,6 +223,38 @@ export default function App() {
       setIsExportingPdf(true);
       await exportAssignmentToPdf(element, assignmentData);
       showToast('success', 'Assignment PDF downloaded successfully!');
+    } catch (err) {
+      console.error('PDF export failed:', err);
+      showToast('error', 'Failed to generate PDF. You can also use the "Print / Save as PDF" button.');
+    } finally {
+      setIsExportingPdf(false);
+    }
+  };
+
+  // CT Cover exports
+  const handleExportCtDocx = async () => {
+    try {
+      setIsExportingDocx(true);
+      await exportCtToDocx(ctData);
+      showToast('success', 'CT Cover Word (.docx) downloaded successfully!');
+    } catch (err) {
+      console.error('Docx export failed:', err);
+      showToast('error', 'Failed to generate Word document. Please try again.');
+    } finally {
+      setIsExportingDocx(false);
+    }
+  };
+
+  const handleExportCtPdf = async () => {
+    const element = ctPreviewRef.current || document.getElementById('ct-cover-page-a4');
+    if (!element) {
+      showToast('error', 'Preview element not found.');
+      return;
+    }
+    try {
+      setIsExportingPdf(true);
+      await exportCtToPdf(element, ctData);
+      showToast('success', 'CT Cover PDF downloaded successfully!');
     } catch (err) {
       console.error('PDF export failed:', err);
       showToast('error', 'Failed to generate PDF. You can also use the "Print / Save as PDF" button.');
@@ -410,24 +468,24 @@ export default function App() {
             </div>
           </button>
 
-          {/* 7. CGPA Calculator */}
+          {/* 7. CT Cover */}
           <button
             type="button"
             onClick={() => {
-              setActiveSection('cgpa');
+              setActiveSection('ct');
               setIsMobileMenuOpen(false);
             }}
             className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-semibold transition text-left min-h-[48px] ${
-              activeSection === 'cgpa'
+              activeSection === 'ct'
                 ? 'bg-[#FFF1D1] text-[#DF301C] shadow-xs border-l-4 border-[#00B7CD]'
                 : 'text-slate-700 hover:bg-[#FAF7EE] hover:text-[#DF301C] border-l-4 border-transparent'
             }`}
           >
-            <div className={`p-2 rounded-lg ${activeSection === 'cgpa' ? 'bg-[#DF301C] text-white' : 'bg-slate-100 text-slate-600'}`}>
-              <Calculator className="w-4 h-4" />
+            <div className={`p-2 rounded-lg ${activeSection === 'ct' ? 'bg-[#DF301C] text-white' : 'bg-slate-100 text-slate-600'}`}>
+              <FileCheck className="w-4 h-4" />
             </div>
             <div className="flex-1">
-              <div className="font-bold text-xs">7. CGPA Calculator (UGC)</div>
+              <div className="font-bold text-xs">7. CT Cover</div>
             </div>
           </button>
         </div>
@@ -475,7 +533,7 @@ export default function App() {
             </div>
 
             {/* Mobile/Tablet Preview/Editor Toggle */}
-            {(activeSection === 'assignment' || activeSection === 'cover') && (
+            {(activeSection === 'assignment' || activeSection === 'cover' || activeSection === 'ct') && (
               <div className="lg:hidden flex items-center bg-black/20 p-0.5 rounded-xl border border-white/20">
                 <button
                   type="button"
@@ -603,17 +661,17 @@ export default function App() {
 
             <button
               type="button"
-              id="section-nav-cgpa"
-              title="7. UGC Standard CGPA & SGPA Calculator"
-              onClick={() => setActiveSection('cgpa')}
+              id="section-nav-ct"
+              title="7. Class Test (CT) Cover Page Generator"
+              onClick={() => setActiveSection('ct')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition min-h-[34px] xl:min-h-[36px] whitespace-nowrap shrink-0 ${
-                activeSection === 'cgpa'
+                activeSection === 'ct'
                   ? 'bg-[#00B7CD] text-white shadow-sm ring-1 ring-white/25'
                   : 'text-white/85 hover:bg-white/15 hover:text-white'
               }`}
             >
-              <Calculator className="w-3.5 h-3.5 shrink-0" />
-              <span>7. CGPA Calculator</span>
+              <FileCheck className="w-3.5 h-3.5 shrink-0" />
+              <span>7. CT Cover</span>
             </button>
           </nav>
         </div>
@@ -827,9 +885,97 @@ export default function App() {
           <PdfCutter />
         )}
 
-        {/* 7. CGPA Calculator (UGC Standard) */}
-        {activeSection === 'cgpa' && (
-          <CgpaCalculator />
+        {/* 7. CT Cover Section */}
+        {activeSection === 'ct' && (
+          <div className="lg:grid lg:grid-cols-12 lg:gap-8 items-start">
+            {/* Left Column: Form Controls */}
+            <div className={`lg:col-span-6 xl:col-span-5 no-print ${activeTab === 'preview' ? 'hidden lg:block' : 'block'}`}>
+              <CtCoverForm
+                data={ctData}
+                onChange={setCtData}
+                onExportDocx={handleExportCtDocx}
+                onExportPdf={handleExportCtPdf}
+                onPrint={handlePrint}
+                isExportingDocx={isExportingDocx}
+                isExportingPdf={isExportingPdf}
+              />
+            </div>
+
+            {/* Right Column: Live A4 Preview */}
+            <div className={`lg:col-span-6 xl:col-span-7 ${activeTab === 'editor' ? 'hidden lg:block' : 'block'}`}>
+              {/* Preview Toolbar */}
+              <div className="bg-white rounded-t-xl border border-slate-200 border-b-0 p-3 flex flex-wrap items-center justify-between gap-2 no-print shadow-xs">
+                <div className="flex items-center gap-2">
+                  <span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span className="text-xs font-semibold text-slate-800">
+                    Live A4 CT Document Preview
+                  </span>
+                  <span className="text-[11px] text-slate-400 hidden sm:inline">
+                    (210mm × 297mm)
+                  </span>
+                </div>
+
+                {/* Zoom & Quick Actions */}
+                <div className="flex items-center gap-1.5 ml-auto">
+                  <button
+                    type="button"
+                    onClick={() => setZoom((z) => Math.max(0.35, Number((z - 0.05).toFixed(2))))}
+                    className="p-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition"
+                    title="Zoom Out"
+                  >
+                    <ZoomOut className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleFitZoom}
+                    className="text-xs px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg font-mono transition"
+                    title="Fit to Screen"
+                  >
+                    {Math.round(zoom * 100)}%
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setZoom((z) => Math.min(1.2, Number((z + 0.05).toFixed(2))))}
+                    className="p-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition"
+                    title="Zoom In"
+                  >
+                    <ZoomIn className="w-4 h-4" />
+                  </button>
+
+                  <div className="w-px h-4 bg-slate-200 mx-1"></div>
+
+                  <button
+                    type="button"
+                    id="print-ct-pdf-btn"
+                    onClick={handleExportCtPdf}
+                    disabled={isExportingPdf}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#DF301C] hover:bg-[#C72412] text-white rounded-lg text-xs font-semibold shadow-xs transition disabled:opacity-50"
+                  >
+                    <Printer className="w-3.5 h-3.5" />
+                    <span>PDF</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* A4 Paper Canvas Viewport */}
+              <div className="bg-slate-200/90 rounded-b-xl border border-slate-300/80 p-4 sm:p-8 overflow-auto flex items-center justify-center shadow-inner min-h-[500px]">
+                <div className="relative flex items-center justify-center my-auto mx-auto">
+                  <CtCoverPreview ref={ctPreviewRef} data={ctData} zoom={zoom} />
+                </div>
+              </div>
+
+              {/* Quick Info bar underneath preview */}
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 no-print">
+                <div className="flex items-center gap-2">
+                  <span>Format:</span>
+                  <span className="font-semibold text-slate-700">A4 Portrait Standard</span>
+                  <span>•</span>
+                  <span>Font:</span>
+                  <span className="font-semibold text-slate-700">Times New Roman</span>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
       </main>
 
